@@ -72,7 +72,7 @@
         methods: {
             getLoanList(page){
                 this.$parent.loading = true
-                axios.get(url+"/loam?page="+page)
+                axios.get(url+"/loan?page="+page)
                 .then(res => {
                     console.log(res)
                     this.loans = res.data;
