@@ -16,7 +16,7 @@ class TongtinController extends Controller
      */
     public function index()
     {
-        return TongtinResource::collection( Tongtin::paginate(1) );
+        return TongtinResource::collection( Tongtin::paginate(10) );
     }
 
     /**

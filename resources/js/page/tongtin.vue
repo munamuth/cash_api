@@ -24,7 +24,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr  v-for="(item, index) in tongtins" :key="index">
+                            <tr  v-for="(item, index) in tongtins.data" :key="index">
                                 <td>{{item.id}}</td>
                                 <td>{{item.start_date}}</td>
                                 <td>{{item.name}}</td>
@@ -39,28 +39,26 @@
                                 </td>
                             </tr>
                         </tbody>
-                        <tfoot>
+                        <tfoot v-if="total_page != 1">
 
                             <tr class="text-center justify-content-center">
                                 <td colspan="8" >
                                     <nav aria-label="Page navigation example">
                                     <ul class="pagination">
-                                        <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Previous">
-                                            <span aria-hidden="true">&laquo;</span>
-                                            <span class="sr-only">Previous</span>
-                                        </a>
+                                        <li class="page-item" @click="getTongtinList(1)">
+                                            <router-link :to="{ name : 'tongtin', query: { page: 1 } }" class="page-link">                                                
+                                                <span aria-hidden="true">&laquo;</span>
+                                                <span class="sr-only">First</span>
+                                            </router-link>
                                         </li>
-
-                                        <li  v-for="(item, index) in total_page" :key="index" class="page-item">
+                                        <li  v-for="(item, index) in total_page" :key="index" class="page-item" @click="getTongtinList(item)" >
                                             <router-link class="page-link" :to="{ name : 'tongtin', query: { page: item } }">{{item}}</router-link>
-                                        
-
-                                        <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span>
-                                            <span class="sr-only">Next</span>
-                                        </a>
+                                        </li>
+                                        <li class="page-item" @click="getTongtinList(total_page)">
+                                            <router-link :to="{ name : 'tongtin', query: { page: total_page } }" class="page-link">                                                
+                                                <span aria-hidden="true">&raquo;</span>
+                                                <span class="sr-only">Next</span>
+                                            </router-link>
                                         </li>
                                     </ul>
                                     </nav>
@@ -242,11 +240,11 @@
                 total_item: 0,
                 per_page : 0,
                 total_page : 0,
-                current_page : this.$route.query.page
+                current_page : this.$route.query.page,
             }
         },
         mounted() {
-            this.getTongtinList(2);
+            this.getTongtinList(this.current_page);
             this.getStatusList();
             console.log(this.current_page)
         },
@@ -264,10 +262,10 @@
             },
             getTongtinList(page){
                 this.$parent.loading = true
-                let query = {'page': page};
-                axios.get(url+"/tongtin", query)
+                let query = '?page='+page;
+                axios.get(url+"/tongtin/" + query)
                 .then(res => {
-                    this.tongtins = res.data.data;                    
+                    this.tongtins = res.data;                    
                     this.total_item = res.data.meta.total;
                     this.per_page = res.data.meta.per_page;
                     if( this.total_item % this.per_page == 0 )
@@ -304,6 +302,7 @@
                     if(res.status == 201)
                     {
                         Swal.fire('Message', "Your data was saved successfully!!!", 'success');
+                        this.tongtin = {};
                     }
                     else
                     {

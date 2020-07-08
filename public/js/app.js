@@ -2615,8 +2615,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2630,7 +2628,7 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
-    this.getTongtinList(2);
+    this.getTongtinList(this.current_page);
     this.getStatusList();
     console.log(this.current_page);
   },
@@ -2650,11 +2648,9 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       this.$parent.loading = true;
-      var query = {
-        'page': page
-      };
-      axios.get(url + "/tongtin", query).then(function (res) {
-        _this2.tongtins = res.data.data;
+      var query = '?page=' + page;
+      axios.get(url + "/tongtin/" + query).then(function (res) {
+        _this2.tongtins = res.data;
         _this2.total_item = res.data.meta.total;
         _this2.per_page = res.data.meta.per_page;
 
@@ -2688,6 +2684,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.post(url + "/tongtin", data).then(function (res) {
         if (res.status == 201) {
           Swal.fire('Message', "Your data was saved successfully!!!", 'success');
+          _this3.tongtin = {};
         } else {
           Swal.fire('Message', res.data, 'error');
         }
@@ -43102,7 +43099,7 @@ var render = function() {
             _vm._v(" "),
             _c(
               "tbody",
-              _vm._l(_vm.tongtins, function(item, index) {
+              _vm._l(_vm.tongtins.data, function(item, index) {
                 return _c("tr", { key: index }, [
                   _c("td", [_vm._v(_vm._s(item.id))]),
                   _vm._v(" "),
@@ -43163,50 +43160,141 @@ var render = function() {
               0
             ),
             _vm._v(" "),
-            _c("tfoot", [
-              _c("tr", { staticClass: "text-center justify-content-center" }, [
-                _c("td", { attrs: { colspan: "8" } }, [
+            _vm.total_page != 1
+              ? _c("tfoot", [
                   _c(
-                    "nav",
-                    { attrs: { "aria-label": "Page navigation example" } },
+                    "tr",
+                    { staticClass: "text-center justify-content-center" },
                     [
-                      _c(
-                        "ul",
-                        { staticClass: "pagination" },
-                        [
-                          _vm._m(1),
-                          _vm._v(" "),
-                          _vm._l(_vm.total_page, function(item, index) {
-                            return _c(
-                              "li",
-                              { key: index, staticClass: "page-item" },
+                      _c("td", { attrs: { colspan: "8" } }, [
+                        _c(
+                          "nav",
+                          {
+                            attrs: { "aria-label": "Page navigation example" }
+                          },
+                          [
+                            _c(
+                              "ul",
+                              { staticClass: "pagination" },
                               [
                                 _c(
-                                  "router-link",
+                                  "li",
                                   {
-                                    staticClass: "page-link",
-                                    attrs: {
-                                      to: {
-                                        name: "tongtin",
-                                        query: { page: item }
+                                    staticClass: "page-item",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.getTongtinList(1)
                                       }
                                     }
                                   },
-                                  [_vm._v(_vm._s(item))]
+                                  [
+                                    _c(
+                                      "router-link",
+                                      {
+                                        staticClass: "page-link",
+                                        attrs: {
+                                          to: {
+                                            name: "tongtin",
+                                            query: { page: 1 }
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c(
+                                          "span",
+                                          { attrs: { "aria-hidden": "true" } },
+                                          [_vm._v("«")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c("span", { staticClass: "sr-only" }, [
+                                          _vm._v("First")
+                                        ])
+                                      ]
+                                    )
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _vm._l(_vm.total_page, function(item, index) {
+                                  return _c(
+                                    "li",
+                                    {
+                                      key: index,
+                                      staticClass: "page-item",
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.getTongtinList(item)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c(
+                                        "router-link",
+                                        {
+                                          staticClass: "page-link",
+                                          attrs: {
+                                            to: {
+                                              name: "tongtin",
+                                              query: { page: item }
+                                            }
+                                          }
+                                        },
+                                        [_vm._v(_vm._s(item))]
+                                      )
+                                    ],
+                                    1
+                                  )
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "li",
+                                  {
+                                    staticClass: "page-item",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.getTongtinList(
+                                          _vm.total_page
+                                        )
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _c(
+                                      "router-link",
+                                      {
+                                        staticClass: "page-link",
+                                        attrs: {
+                                          to: {
+                                            name: "tongtin",
+                                            query: { page: _vm.total_page }
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c(
+                                          "span",
+                                          { attrs: { "aria-hidden": "true" } },
+                                          [_vm._v("»")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c("span", { staticClass: "sr-only" }, [
+                                          _vm._v("Next")
+                                        ])
+                                      ]
+                                    )
+                                  ],
+                                  1
                                 )
                               ],
-                              1
+                              2
                             )
-                          }),
-                          _vm._m(2)
-                        ],
-                        2
-                      )
+                          ]
+                        )
+                      ])
                     ]
                   )
                 ])
-              ])
-            ])
+              : _vm._e()
           ])
         ])
       ])
@@ -43230,11 +43318,11 @@ var render = function() {
           { staticClass: "modal-dialog", attrs: { role: "document" } },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(3),
+              _vm._m(1),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
                 _c("div", { staticClass: "form-group row" }, [
-                  _vm._m(4),
+                  _vm._m(2),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c("input", {
@@ -43266,7 +43354,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group row" }, [
-                  _vm._m(5),
+                  _vm._m(3),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c("input", {
@@ -43294,7 +43382,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group row" }, [
-                  _vm._m(6),
+                  _vm._m(4),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c("input", {
@@ -43322,7 +43410,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group row" }, [
-                  _vm._m(7),
+                  _vm._m(5),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c("input", {
@@ -43354,7 +43442,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group row" }, [
-                  _vm._m(8),
+                  _vm._m(6),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c("input", {
@@ -43386,7 +43474,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group row" }, [
-                  _vm._m(9),
+                  _vm._m(7),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c("textarea", {
@@ -43461,11 +43549,11 @@ var render = function() {
           { staticClass: "modal-dialog", attrs: { role: "document" } },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(10),
+              _vm._m(8),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
                 _c("div", { staticClass: "form-group row" }, [
-                  _vm._m(11),
+                  _vm._m(9),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c("input", {
@@ -43497,7 +43585,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group row" }, [
-                  _vm._m(12),
+                  _vm._m(10),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c("input", {
@@ -43525,7 +43613,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group row" }, [
-                  _vm._m(13),
+                  _vm._m(11),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c("input", {
@@ -43553,7 +43641,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group row" }, [
-                  _vm._m(14),
+                  _vm._m(12),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c("input", {
@@ -43585,7 +43673,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group row" }, [
-                  _vm._m(15),
+                  _vm._m(13),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c("input", {
@@ -43617,7 +43705,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group row" }, [
-                  _vm._m(16),
+                  _vm._m(14),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c(
@@ -43664,7 +43752,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group row" }, [
-                  _vm._m(17),
+                  _vm._m(15),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c("textarea", {
@@ -43745,44 +43833,6 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Action")])
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "page-item" }, [
-      _c(
-        "a",
-        {
-          staticClass: "page-link",
-          attrs: { href: "#", "aria-label": "Previous" }
-        },
-        [
-          _c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("«")]),
-          _vm._v(" "),
-          _c("span", { staticClass: "sr-only" }, [_vm._v("Previous")])
-        ]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "page-item" }, [
-      _c(
-        "a",
-        {
-          staticClass: "page-link",
-          attrs: { href: "#", "aria-label": "Next" }
-        },
-        [
-          _c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("»")]),
-          _vm._v(" "),
-          _c("span", { staticClass: "sr-only" }, [_vm._v("Next")])
-        ]
-      )
     ])
   },
   function() {
