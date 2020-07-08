@@ -2215,12 +2215,41 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       cashs: {},
       cash: {},
-      status: ["1", "2"]
+      status: ["1", "2"],
+      total_item: 0,
+      per_page: 0,
+      total_page: 0,
+      current_page: this.$route.query.page
     };
   },
   mounted: function mounted() {
@@ -2233,7 +2262,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.$parent.loading = true;
       axios.get(url + '/status').then(function (res) {
-        _this.status = res.data.data;
+        _this.status = res.data;
         _this.$parent.loading = false;
       })["catch"](function (err) {
         console.error(err.response.data.message);
@@ -2243,15 +2272,27 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       this.$parent.loading = true;
-      axios.get(url + '/cash').then(function (res) {
+      var query = '?page=' + page;
+      axios.get(url + "/cash/" + query).then(function (res) {
         _this2.cashs = res.data.data;
+        _this2.total_item = res.data.meta.total;
+        _this2.per_page = res.data.meta.per_page;
+
+        if (_this2.total_item % _this2.per_page == 0) {
+          _this2.total_page = _this2.total_item / _this2.per_page;
+        } else {
+          _this2.total_page = parseInt(_this2.total_item / _this2.per_page) + 1;
+        }
+
         _this2.$parent.loading = false;
       })["catch"](function (err) {
         console.error(err.response.data.message);
       });
     },
     btnCreate_Click: function btnCreate_Click() {
-      this.cash = {};
+      this.cash = {
+        date: todayDate
+      };
       $("#modalCreateCash").modal();
     },
     btnSave_Click: function btnSave_Click() {
@@ -42236,7 +42277,133 @@ var render = function() {
                     ])
                   }),
                   0
-                )
+                ),
+                _vm._v(" "),
+                _c("tfoot", [
+                  _c("tr", [
+                    _c("td", { attrs: { colspan: "8" } }, [
+                      _c(
+                        "nav",
+                        { attrs: { "aria-label": "Page navigation example" } },
+                        [
+                          _c(
+                            "ul",
+                            { staticClass: "pagination" },
+                            [
+                              _c(
+                                "li",
+                                {
+                                  staticClass: "page-item",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.getTongtinList(1)
+                                    }
+                                  }
+                                },
+                                [
+                                  _c(
+                                    "router-link",
+                                    {
+                                      staticClass: "page-link",
+                                      attrs: {
+                                        to: {
+                                          name: "tongtin",
+                                          query: { page: 1 }
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c(
+                                        "span",
+                                        { attrs: { "aria-hidden": "true" } },
+                                        [_vm._v("«")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c("span", { staticClass: "sr-only" }, [
+                                        _vm._v("First")
+                                      ])
+                                    ]
+                                  )
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _vm._l(_vm.total_page, function(item, index) {
+                                return _c(
+                                  "li",
+                                  {
+                                    key: index,
+                                    staticClass: "page-item",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.getTongtinList(item)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _c(
+                                      "router-link",
+                                      {
+                                        staticClass: "page-link",
+                                        attrs: {
+                                          to: {
+                                            name: "tongtin",
+                                            query: { page: item }
+                                          }
+                                        }
+                                      },
+                                      [_vm._v(_vm._s(item))]
+                                    )
+                                  ],
+                                  1
+                                )
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "li",
+                                {
+                                  staticClass: "page-item",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.getTongtinList(_vm.total_page)
+                                    }
+                                  }
+                                },
+                                [
+                                  _c(
+                                    "router-link",
+                                    {
+                                      staticClass: "page-link",
+                                      attrs: {
+                                        to: {
+                                          name: "tongtin",
+                                          query: { page: _vm.total_page }
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c(
+                                        "span",
+                                        { attrs: { "aria-hidden": "true" } },
+                                        [_vm._v("»")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c("span", { staticClass: "sr-only" }, [
+                                        _vm._v("Next")
+                                      ])
+                                    ]
+                                  )
+                                ],
+                                1
+                              )
+                            ],
+                            2
+                          )
+                        ]
+                      )
+                    ])
+                  ])
+                ])
               ])
             ])
           ])

@@ -16,7 +16,7 @@ class CashController extends Controller
      */
     public function index()
     {
-        return CashResource::collection(Cash::get());
+        return CashResource::collection(Cash::paginate(1));
     }
 
     /**

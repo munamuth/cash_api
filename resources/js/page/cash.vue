@@ -42,6 +42,31 @@
                                         </td>
                                     </tr>
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="8" >
+                                    <nav aria-label="Page navigation example">
+                                    <ul class="pagination">
+                                        <li class="page-item" @click="getTongtinList(1)">
+                                            <router-link :to="{ name : 'tongtin', query: { page: 1 } }" class="page-link">                                                
+                                                <span aria-hidden="true">&laquo;</span>
+                                                <span class="sr-only">First</span>
+                                            </router-link>
+                                        </li>
+                                        <li  v-for="(item, index) in total_page" :key="index" class="page-item" @click="getTongtinList(item)" >
+                                            <router-link class="page-link" :to="{ name : 'tongtin', query: { page: item } }">{{item}}</router-link>
+                                        </li>
+                                        <li class="page-item" @click="getTongtinList(total_page)">
+                                            <router-link :to="{ name : 'tongtin', query: { page: total_page } }" class="page-link">                                                
+                                                <span aria-hidden="true">&raquo;</span>
+                                                <span class="sr-only">Next</span>
+                                            </router-link>
+                                        </li>
+                                    </ul>
+                                    </nav>
+                                </td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -269,6 +294,10 @@
                 cashs : {},
                 cash : {},
                 status : ["1", "2"],
+                total_item: 0,
+                per_page : 0,
+                total_page : 0,
+                current_page : this.$route.query.page,
             }
         },
         mounted() {
@@ -280,7 +309,7 @@
                 this.$parent.loading = true
                 axios.get(url+'/status')
                 .then(res => {
-                    this.status = res.data.data;
+                    this.status = res.data;
                     this.$parent.loading = false
                 })
                 .catch(err => {
@@ -290,9 +319,20 @@
             getCashList()
             {
                 this.$parent.loading = true
-                axios.get(url+'/cash')
+                let query = '?page='+page;
+                axios.get(url+"/cash/" + query)
                 .then(res => {
                     this.cashs = res.data.data;
+                    this.total_item = res.data.meta.total;
+                    this.per_page = res.data.meta.per_page;
+                    if( this.total_item % this.per_page == 0 )
+                    {
+                        this.total_page = this.total_item / this.per_page;
+                    }
+                    else
+                    {
+                        this.total_page = parseInt(this.total_item / this.per_page) + 1;
+                    }
                     this.$parent.loading = false
                 })
                 .catch(err => {
@@ -301,7 +341,7 @@
             },
             btnCreate_Click()
             {
-                this.cash = {};
+                this.cash = { date : todayDate};
                 $("#modalCreateCash").modal();
             },
             btnSave_Click()
