@@ -21,4 +21,5 @@ use Illuminate\Support\Facades\Route;
 Route::resource("/cash", 'api\CashController');
 Route::resource("/status", 'api\StatusController');
 Route::resource("/tongtin", 'api\TongtinController');
+Route::resource("/loan", 'api\LoanController');
 

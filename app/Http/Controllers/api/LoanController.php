@@ -4,6 +4,8 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Loan;
+use App\Http\Resources\LoanResource;
 
 class LoanController extends Controller
 {
@@ -14,7 +16,7 @@ class LoanController extends Controller
      */
     public function index()
     {
-        //
+        return LoanResource::collection(Loan::paginate(1));
     }
 
     /**
