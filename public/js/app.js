@@ -2483,12 +2483,110 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       loans: {},
       loan: {},
-      current_page: 1
+      total_item: 0,
+      per_page: 0,
+      total_page: 0,
+      current_page: this.$route.query.page
     };
   },
   mounted: function mounted() {
@@ -2499,12 +2597,20 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.$parent.loading = true;
-      axios.get(url + "/loam?page=" + page).then(function (res) {
-        console.log(res);
+      axios.get(url + "/loan?page=" + page).then(function (res) {
         _this.loans = res.data;
+        _this.total_item = res.data.meta.total;
+        _this.per_page = res.data.meta.per_page;
+
+        if (_this.total_item % _this.per_page == 0) {
+          _this.total_page = _this.total_item / _this.per_page;
+        } else {
+          _this.total_page = parseInt(_this.total_item / _this.per_page) + 1;
+        }
+
         _this.$parent.loading = false;
       })["catch"](function (err) {
-        console.error(err);
+        console.error(err.response);
       });
     },
     btnCreate_Click: function btnCreate_Click() {
@@ -2512,7 +2618,36 @@ __webpack_require__.r(__webpack_exports__);
         date: todayDate
       };
       $("#modalCreateLoan").modal();
-    }
+    },
+    btnSave_Click: function btnSave_Click() {
+      var _this2 = this;
+
+      var data = new FormData();
+      data.append('date', this.loan.date);
+      data.append('name', this.loan.name);
+      data.append('amount', this.loan.amount);
+      data.append('is_loan', this.loan.is_loan);
+      data.append('duration', this.loan.duration);
+      data.append('description', this.loan.description);
+      this.$parent.loading = true;
+      axios.post(url + "/loan", data).then(function (res) {
+        console.log(res);
+
+        if (res.status == 201) {
+          _this2.$parent.loading = false;
+          Swal.fire("Message", "Your data was created successfully!!!", 'success');
+          $("#modalCreateLoan").modal('hide');
+          _this2.current_page = _this2.$route.query.page;
+
+          _this2.getLoanList(_this2.current_page);
+        }
+      })["catch"](function (err) {
+        console.error(err.response);
+      });
+    },
+    btnEdit_Click: function btnEdit_Click() {},
+    btnDetails_Click: function btnDetails_Click(id) {},
+    btnDelete_Click: function btnDelete_Click() {}
   }
 });
 
@@ -43347,15 +43482,17 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { staticClass: "row mt-3" }, [
-      _c("div", { staticClass: "col text-right" }, [
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-primary",
-            on: { click: _vm.btnCreate_Click }
-          },
-          [_vm._v("Create")]
-        )
+      _c("div", { staticClass: "col" }, [
+        _c("div", { staticClass: "form-group text-right" }, [
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary",
+              on: { click: _vm.btnCreate_Click }
+            },
+            [_vm._v("Create")]
+          )
+        ])
       ])
     ]),
     _vm._v(" "),
@@ -43369,25 +43506,437 @@ var render = function() {
               "tbody",
               _vm._l(_vm.loans.data, function(item, index) {
                 return _c("tr", { key: index }, [
-                  _c("td", [_vm._v(_vm._s(_vm.loan.id))]),
+                  _c("td", [_vm._v(_vm._s(item.id))]),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(_vm.loan.name))]),
+                  _c("td", [_vm._v(_vm._s(item.name))]),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(_vm.loan.type))]),
+                  _c("td", [_vm._v(_vm._s(item.is_loan))]),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(_vm.loan.amount))]),
+                  _c("td", [_vm._v(_vm._s(item.amount))]),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(_vm.loan.status))])
+                  _c("td", [_vm._v(_vm._s(item.duration))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(item.status_id))]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-info btn-sm",
+                        on: {
+                          click: function($event) {
+                            return _vm.btnDetails_Click(item.id)
+                          }
+                        }
+                      },
+                      [_vm._v("Details")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-warning btn-sm",
+                        on: {
+                          click: function($event) {
+                            return _vm.btnEdit_Click(item.id)
+                          }
+                        }
+                      },
+                      [_vm._v("Edit")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger btn-sm",
+                        on: {
+                          click: function($event) {
+                            return _vm.btnDelete_Click(item.id)
+                          }
+                        }
+                      },
+                      [_vm._v("Delete")]
+                    )
+                  ])
                 ])
               }),
               0
-            )
+            ),
+            _vm._v(" "),
+            _vm.total_page != 1
+              ? _c("tfoot", [
+                  _c(
+                    "tr",
+                    { staticClass: "text-center justify-content-center" },
+                    [
+                      _c("td", { attrs: { colspan: "8" } }, [
+                        _c(
+                          "nav",
+                          {
+                            attrs: { "aria-label": "Page navigation example" }
+                          },
+                          [
+                            _c(
+                              "ul",
+                              { staticClass: "pagination" },
+                              [
+                                _c(
+                                  "li",
+                                  {
+                                    staticClass: "page-item",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.getLoanList(1)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _c(
+                                      "router-link",
+                                      {
+                                        staticClass: "page-link",
+                                        attrs: {
+                                          to: {
+                                            name: "loan",
+                                            query: { page: 1 }
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c(
+                                          "span",
+                                          { attrs: { "aria-hidden": "true" } },
+                                          [_vm._v("«")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c("span", { staticClass: "sr-only" }, [
+                                          _vm._v("First")
+                                        ])
+                                      ]
+                                    )
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _vm._l(_vm.total_page, function(item, index) {
+                                  return _c(
+                                    "li",
+                                    {
+                                      key: index,
+                                      staticClass: "page-item",
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.getLoanList(item)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c(
+                                        "router-link",
+                                        {
+                                          staticClass: "page-link",
+                                          attrs: {
+                                            to: {
+                                              name: "loan",
+                                              query: { page: item }
+                                            }
+                                          }
+                                        },
+                                        [_vm._v(_vm._s(item))]
+                                      )
+                                    ],
+                                    1
+                                  )
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "li",
+                                  {
+                                    staticClass: "page-item",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.getLoanList(_vm.total_page)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _c(
+                                      "router-link",
+                                      {
+                                        staticClass: "page-link",
+                                        attrs: {
+                                          to: {
+                                            name: "loan",
+                                            query: { page: _vm.total_page }
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c(
+                                          "span",
+                                          { attrs: { "aria-hidden": "true" } },
+                                          [_vm._v("»")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c("span", { staticClass: "sr-only" }, [
+                                          _vm._v("Next")
+                                        ])
+                                      ]
+                                    )
+                                  ],
+                                  1
+                                )
+                              ],
+                              2
+                            )
+                          ]
+                        )
+                      ])
+                    ]
+                  )
+                ])
+              : _vm._e()
           ])
         ])
       ])
     ]),
     _vm._v(" "),
-    _vm._m(1)
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "modalCreateLoan",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "modelTitleId",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(1),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c("div", { staticClass: "row form-group" }, [
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.loan.date,
+                          expression: "loan.date"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "date" },
+                      domProps: { value: _vm.loan.date },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.loan, "date", $event.target.value)
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row form-group" }, [
+                  _vm._m(3),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.loan.name,
+                          expression: "loan.name"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "text" },
+                      domProps: { value: _vm.loan.name },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.loan, "name", $event.target.value)
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row form-group" }, [
+                  _vm._m(4),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.loan.amount,
+                          expression: "loan.amount"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "number" },
+                      domProps: { value: _vm.loan.amount },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.loan, "amount", $event.target.value)
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row form-group" }, [
+                  _vm._m(5),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col" }, [
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.loan.is_loan,
+                            expression: "loan.is_loan"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.loan,
+                              "is_loan",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          }
+                        }
+                      },
+                      [
+                        _c("option", { attrs: { value: "0" } }, [
+                          _vm._v("Loan")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "1" } }, [
+                          _vm._v("Lend")
+                        ])
+                      ]
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row form-group" }, [
+                  _vm._m(6),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.loan.duration,
+                          expression: "loan.duration"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "number" },
+                      domProps: { value: _vm.loan.duration },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.loan, "duration", $event.target.value)
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row form-group" }, [
+                  _vm._m(7),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col" }, [
+                    _c("textarea", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.loan.description,
+                          expression: "loan.description"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "number" },
+                      domProps: { value: _vm.loan.description },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.loan, "description", $event.target.value)
+                        }
+                      }
+                    })
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Close")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button" },
+                    on: { click: _vm.btnSave_Click }
+                  },
+                  [_vm._v("Save")]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    )
   ])
 }
 var staticRenderFns = [
@@ -43417,72 +43966,70 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass: "modal fade",
-        attrs: {
-          id: "modalCreateLoan",
-          tabindex: "-1",
-          role: "dialog",
-          "aria-labelledby": "modelTitleId",
-          "aria-hidden": "true"
-        }
-      },
-      [
-        _c(
-          "div",
-          { staticClass: "modal-dialog", attrs: { role: "document" } },
-          [
-            _c("div", { staticClass: "modal-content" }, [
-              _c("div", { staticClass: "modal-header" }, [
-                _c("h5", { staticClass: "modal-title" }, [
-                  _vm._v("Modal title")
-                ]),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "close",
-                    attrs: {
-                      type: "button",
-                      "data-dismiss": "modal",
-                      "aria-label": "Close"
-                    }
-                  },
-                  [
-                    _c("span", { attrs: { "aria-hidden": "true" } }, [
-                      _vm._v("×")
-                    ])
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "modal-body" }, [
-                _vm._v("\n                    Body\n                ")
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "modal-footer" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-secondary",
-                    attrs: { type: "button", "data-dismiss": "modal" }
-                  },
-                  [_vm._v("Close")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  { staticClass: "btn btn-primary", attrs: { type: "button" } },
-                  [_vm._v("Save")]
-                )
-              ])
-            ])
-          ]
-        )
-      ]
-    )
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h5", { staticClass: "modal-title" }, [_vm._v("Create New Loan")]),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-12 col-sm-4" }, [
+      _c("label", { attrs: { for: "" } }, [_vm._v("Date")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-12 col-sm-4" }, [
+      _c("label", { attrs: { for: "" } }, [_vm._v("Name")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-12 col-sm-4" }, [
+      _c("label", { attrs: { for: "" } }, [_vm._v("Amount")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-12 col-sm-4" }, [
+      _c("label", { attrs: { for: "" } }, [_vm._v("Type")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-12 col-sm-4" }, [
+      _c("label", { attrs: { for: "" } }, [_vm._v("Duration")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-12 col-sm-4" }, [
+      _c("label", { attrs: { for: "" } }, [_vm._v("Description")])
+    ])
   }
 ]
 render._withStripped = true

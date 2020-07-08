@@ -16,7 +16,7 @@ class LoanController extends Controller
      */
     public function index()
     {
-        return LoanResource::collection(Loan::paginate(1));
+        return LoanResource::collection(Loan::paginate(5));
     }
 
     /**
@@ -37,7 +37,7 @@ class LoanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return Loan::create($request->all());
     }
 
     /**

@@ -1,8 +1,10 @@
 <template>
     <div>
         <div class="row mt-3">
-            <div class="col text-right">
-                <button class="btn btn-primary" @click="btnCreate_Click">Create</button>
+            <div class="col">
+                <div class="form-group text-right">
+                    <button class="btn btn-primary" @click="btnCreate_Click">Create</button>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -22,13 +24,47 @@
                         </thead>
                         <tbody>
                             <tr v-for="(item, index) in loans.data" :key="index">
-                                <td>{{loan.id}}</td>
-                                <td>{{loan.name}}</td>
-                                <td>{{loan.type}}</td>
-                                <td>{{loan.amount}}</td>
-                                <td>{{loan.status}}</td>
+                                <td>{{item.id}}</td>
+                                <td>{{item.name}}</td>
+                                <td>{{item.is_loan}}</td>
+                                <td>{{item.amount}}</td>
+                                <td>{{item.duration}}</td>
+                                <td>{{item.status_id}}</td>
+                                                          
+                                <td>
+                                    <button class="btn btn-info btn-sm" @click="btnDetails_Click(item.id)">Details</button>
+                                    <button class="btn btn-warning btn-sm" @click="btnEdit_Click(item.id)">Edit</button>
+                                    <button class="btn btn-danger btn-sm" @click="btnDelete_Click(item.id)">Delete</button>
+                                </td>
+
                             </tr>
                         </tbody>
+                        <tfoot v-if="total_page != 1">
+
+                            <tr class="text-center justify-content-center">
+                                <td colspan="8" >
+                                    <nav aria-label="Page navigation example">
+                                    <ul class="pagination">
+                                        <li class="page-item" @click="getLoanList(1)">
+                                            <router-link :to="{ name : 'loan', query: { page: 1 } }" class="page-link">                                                
+                                                <span aria-hidden="true">&laquo;</span>
+                                                <span class="sr-only">First</span>
+                                            </router-link>
+                                        </li>
+                                        <li  v-for="(item, index) in total_page" :key="index" class="page-item" @click="getLoanList(item)" >
+                                            <router-link class="page-link" :to="{ name : 'loan', query: { page: item } }">{{item}}</router-link>
+                                        </li>
+                                        <li class="page-item" @click="getLoanList(total_page)">
+                                            <router-link :to="{ name : 'loan', query: { page: total_page } }" class="page-link">                                                
+                                                <span aria-hidden="true">&raquo;</span>
+                                                <span class="sr-only">Next</span>
+                                            </router-link>
+                                        </li>
+                                    </ul>
+                                    </nav>
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -39,17 +75,76 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Modal title</h5>
+                        <h5 class="modal-title">Create New Loan</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                     </div>
                     <div class="modal-body">
-                        Body
+                    
+                        <div class="row form-group">
+                            <div class="col-12 col-sm-4">
+                                <label for="">Date</label>
+                            </div>
+                            <div class="col">
+                                <input type="date" v-model="loan.date" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-12 col-sm-4">
+                                <label for="">Name</label>
+                            </div>
+                            <div class="col">
+                                <input type="text" v-model="loan.name" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-12 col-sm-4">
+                                <label for="">Amount</label>
+                            </div>
+                            <div class="col">
+                                <input type="number" v-model="loan.amount" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-12 col-sm-4">
+                                <label for="">Type</label>
+                            </div>
+                            <div class="col">
+                                <select v-model="loan.is_loan" class="form-control">
+                                    <option value="0">Loan</option>
+                                    <option value="1">Lend</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-12 col-sm-4">
+                                <label for="">Duration</label>
+                            </div>
+                            <div class="col">
+                                <input type="number" v-model="loan.duration" class="form-control">
+                                
+                            </div>
+                        </div>
+
+                        
+                        <div class="row form-group">
+                            <div class="col-12 col-sm-4">
+                                <label for="">Description</label>
+                            </div>
+                            <div class="col">
+                                <textarea type="number" v-model="loan.description" class="form-control"></textarea>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-primary" @click="btnSave_Click">Save</button>
                     </div>
                 </div>
             </div>
@@ -63,7 +158,10 @@
             return {
                 loans : {},
                 loan : {},
-                current_page: 1,
+                total_item: 0,
+                per_page : 0,
+                total_page : 0,
+                current_page : this.$route.query.page,
             }
         },
         mounted() {
@@ -74,17 +172,59 @@
                 this.$parent.loading = true
                 axios.get(url+"/loan?page="+page)
                 .then(res => {
-                    console.log(res)
                     this.loans = res.data;
+                    this.total_item = res.data.meta.total;
+                    this.per_page = res.data.meta.per_page;
+                    if( this.total_item % this.per_page == 0 )
+                    {
+                        this.total_page = this.total_item / this.per_page;
+                    }
+                    else
+                    {
+                        this.total_page = parseInt(this.total_item / this.per_page) + 1;
+                    }
                     this.$parent.loading = false
                 })
                 .catch(err => {
-                    console.error(err); 
+                    console.error(err.response); 
                 })
             },
             btnCreate_Click(){
                 this.loan = { date : todayDate };
                 $("#modalCreateLoan").modal();
+            },
+            btnSave_Click(){
+                let data = new FormData();
+                data.append('date', this.loan.date);
+                data.append('name', this.loan.name);
+                data.append('amount', this.loan.amount);
+                data.append('is_loan', this.loan.is_loan);
+                data.append('duration', this.loan.duration);                
+                data.append('description', this.loan.description);
+                this.$parent.loading = true
+                axios.post(url+"/loan",data)
+                .then(res => {
+                    console.log(res)
+                    if(res.status == 201){
+                        
+                        this.$parent.loading = false;
+                        Swal.fire("Message", "Your data was created successfully!!!", 'success');
+                        $("#modalCreateLoan").modal('hide');
+                        this.current_page = this.$route.query.page;
+                        this.getLoanList(this.current_page)
+                    }
+                })
+                .catch(err => {
+                    console.error(err.response); 
+                })
+            },
+            btnEdit_Click(){
+
+            },
+            btnDetails_Click(id){
+            },
+            btnDelete_Click (){
+
             },
         },
     }
