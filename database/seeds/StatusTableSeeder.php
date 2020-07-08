@@ -11,11 +11,9 @@ class StatusTableSeeder extends Seeder
      */
     public function run()
     {
-        Status::Insert(
-            [
+        Status::Insert([
                 ['name' => 'Active'],
                 ['name' => 'Inactive'],
-            ],
-        );
+            ]);
     }
 }
