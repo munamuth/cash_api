@@ -16,7 +16,7 @@ class LoanController extends Controller
      */
     public function index()
     {
-        return LoanResource::collection(Loan::paginate(5));
+        return LoanResource::collection(Loan::paginate(10));
     }
 
     /**
@@ -48,7 +48,7 @@ class LoanController extends Controller
      */
     public function show($id)
     {
-        //
+        return new LoanResource(Loan::find($id));
     }
 
     /**
@@ -71,7 +71,15 @@ class LoanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $loan = Loan::find($id);
+        $loan->date = $request->date;
+        $loan->name = $request->name;
+        $loan->is_loan = $request->is_loan;
+        $loan->amount = $request->amount;
+        $loan->duration = $request->duration;
+        $loan->description = $request->description;
+        $loan->status_id = $request->status_id;
+        return $loan->save();
     }
 
     /**
@@ -82,6 +90,6 @@ class LoanController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return Loan::destroy($id);
     }
 }

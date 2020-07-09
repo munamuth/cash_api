@@ -15,19 +15,22 @@
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Date</th>
+                                        <th style="min-width: 110px;">Date</th>
                                         <th>Name</th>
                                         <th>Type</th>
                                         <th>Status</th>
                                         <th>Amount</th>
-                                        <th>Action</th>
+                                        <th style="min-width: 185px;">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <tr v-if="cashs == ''">
+                                        <td class="text-center text-danger" colspan="7">NO DATA</td>
+                                    </tr>
                                     <tr v-for="(item, index) in cashs" :key="index">
                                         <td>{{item.id}}</td>
                                         <td>{{item.date}}</td>
@@ -43,28 +46,28 @@
                                     </tr>
                                 </tbody>
                                 <tfoot>
-                                    <tr>
+                                    <tr v-if="total_page > 1">
                                         <td colspan="8" >
-                                    <nav aria-label="Page navigation example">
-                                    <ul class="pagination">
-                                        <li class="page-item" @click="getTongtinList(1)">
-                                            <router-link :to="{ name : 'tongtin', query: { page: 1 } }" class="page-link">                                                
-                                                <span aria-hidden="true">&laquo;</span>
-                                                <span class="sr-only">First</span>
-                                            </router-link>
-                                        </li>
-                                        <li  v-for="(item, index) in total_page" :key="index" class="page-item" @click="getTongtinList(item)" >
-                                            <router-link class="page-link" :to="{ name : 'tongtin', query: { page: item } }">{{item}}</router-link>
-                                        </li>
-                                        <li class="page-item" @click="getTongtinList(total_page)">
-                                            <router-link :to="{ name : 'tongtin', query: { page: total_page } }" class="page-link">                                                
-                                                <span aria-hidden="true">&raquo;</span>
-                                                <span class="sr-only">Next</span>
-                                            </router-link>
-                                        </li>
-                                    </ul>
-                                    </nav>
-                                </td>
+                                            <nav aria-label="Page navigation example">
+                                            <ul class="pagination">
+                                                <li class="page-item" @click="getCashList(1)">
+                                                    <router-link :to="{ name : 'cash', query: { page: 1 } }" class="page-link">                                                
+                                                        <span aria-hidden="true">&laquo;</span>
+                                                        <span class="sr-only">First</span>
+                                                    </router-link>
+                                                </li>
+                                                <li  v-for="(item, index) in total_page" :key="index" class="page-item" @click="getCashList(item)" >
+                                                    <router-link class="page-link" :to="{ name : 'cash', query: { page: item } }">{{item}}</router-link>
+                                                </li>
+                                                <li class="page-item" @click="getCashList(total_page)">
+                                                    <router-link :to="{ name : 'cash', query: { page: total_page } }" class="page-link">                                                
+                                                        <span aria-hidden="true">&raquo;</span>
+                                                        <span class="sr-only">Next</span>
+                                                    </router-link>
+                                                </li>
+                                            </ul>
+                                            </nav>
+                                        </td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -243,9 +246,6 @@
             </div>
         </div>
         <!-- MODAL SHOW CASH -->
-        <!-- Button trigger modal -->
-        
-        <!-- Modal -->
         <div class="modal fade" id="modalShowCash" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -316,7 +316,7 @@
                     console.error(err.response.data.message); 
                 })
             },
-            getCashList()
+            getCashList(page)
             {
                 this.$parent.loading = true
                 let query = '?page='+page;
@@ -452,5 +452,4 @@
 </script>
 
 <style>
-
 </style>

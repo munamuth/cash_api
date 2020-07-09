@@ -41,7 +41,7 @@
             position: absolute;
             left: calc(50% - 75px);
             top: calc(50vh - 40px);
-            z-index: 1000;
+            z-index: 10000;
             width: 150px;
             height: 80px;
             padding: 15px;

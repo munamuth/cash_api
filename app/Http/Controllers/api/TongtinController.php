@@ -18,6 +18,10 @@ class TongtinController extends Controller
     {
         return TongtinResource::collection( Tongtin::paginate(10) );
     }
+    public function TongtinAll()
+    {
+        return TongtinResource::collection( Tongtin::orderBy('name', 'asc')->get() );
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -49,7 +53,7 @@ class TongtinController extends Controller
      */
     public function show($id)
     {
-        //
+        return new TongtinResource(Tongtin::find($id));
     }
 
     /**
@@ -72,7 +76,16 @@ class TongtinController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $tongtin = Tongtin::find($id);
+
+        $tongtin->start_date = $request->start_date;
+        $tongtin->name = $request->name;
+        $tongtin->amount = $request->amount;
+        $tongtin->number_of_play = $request->number_of_play;
+        $tongtin->number_of_player = $request->number_of_player;
+        $tongtin->description = $request->description;
+        $tongtin->status_id = $request->status_id;
+        return $tongtin->save();
     }
 
     /**
@@ -83,6 +96,6 @@ class TongtinController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return Tongtin::destroy($id);
     }
 }
