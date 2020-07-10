@@ -24,7 +24,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr  v-for="(item, index) in tongtins.data" :key="index">
+                            <tr v-if="tongtins.data == ''">
+                                <td class="text-center text-danger" colspan="8">NO DATA</td>
+                            </tr>
+                            <tr v-else v-for="(item, index) in tongtins.data" :key="index">
                                 <td class="pt-0">{{item.id}}</td>
                                 <td>{{item.start_date}}</td>
                                 <td>{{item.name}}</td>
