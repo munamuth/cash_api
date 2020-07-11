@@ -97,7 +97,16 @@
 
                         <div class="row form-group">
                             <div class="col-12 col-sm-4">
-                                <label for="">Number Of Play</label>
+                                <label for="">Amount</label>
+                            </div>
+                            <div class="col">
+                                <input v-model="pay.amount" type="number" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-12 col-sm-4">
+                                <label for="">Total Amount</label>
                             </div>
                             <div class="col">
                                 <input v-model="GetTotalAmount" type="number" class="form-control" readonly>
@@ -172,17 +181,30 @@
                 $("#modalCreateTongtinPay").modal();
             },
             btnSave_Click(){
-
+                var data = new FormData();
+                data.append("date", this.pay.date);
+                data.append("tongtin_id", this.pay.tongtin_id);
+                data.append("number_of_claim", this.pay.number_of_claim);
+                data.append("amount", this.pay.amount);
+                data.append("total_amount", this.pay.total_amount);
+                this.$parent.loading = true;
+                axios.post(url+"/tongtin_pay",data)
+                .then(res => {
+                    console.log(res)
+                    $("#modalCreateTongtinPay").modal("hide")
+                    Swal.fire("Message", "Your data was created successfully!!!", 'success');
+                    this.getTongtinPayList(this.current_page)
+                })
+                .catch(err => {
+                    console.error(err.response.data); 
+                })
             },
         },
         computed: {
-            GetTotalAmount : {
-                get: () => {
-                    return this.tongtin
-                },
-                set: () => {
-
-                }
+            GetTotalAmount (){
+                this.pay.total_amount = this.tongtin.number_of_play * this.pay.number_of_claim * this.pay.amount;
+                if( this.pay.total_amount != NaN )
+                return  this.pay.total_amount
             },
         },
     }

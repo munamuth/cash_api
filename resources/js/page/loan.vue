@@ -25,7 +25,7 @@
                         </thead>
                         <tbody>
                             <tr v-if="loans.data ==''">
-                                <td colspan="7" class="text-center text-danger">NO DATA</td>
+                                <td colspan="8" class="text-center text-danger">NO DATA</td>
                             </tr>
                             <tr v-else v-for="(item, index) in loans.data" :key="index">
                                 <td>{{item.id}}</td>
