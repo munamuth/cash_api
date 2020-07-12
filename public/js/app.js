@@ -3478,8 +3478,15 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-var _this4 = undefined;
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3655,11 +3662,8 @@ var _this4 = undefined;
     btnSave_Click: function btnSave_Click() {}
   },
   computed: {
-    GetTotalAmount: {
-      get: function get() {
-        return _this4.tongtin;
-      },
-      set: function set() {}
+    GetTotalAmount: function GetTotalAmount() {
+      return this.pay.total_amount = this.tongtin.number_of_play * this.pay.number_of_claim * this.pay.amount;
     }
   }
 });
@@ -47031,6 +47035,34 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
+                          value: _vm.pay.amount,
+                          expression: "pay.amount"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "number" },
+                      domProps: { value: _vm.pay.amount },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.pay, "amount", $event.target.value)
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row form-group" }, [
+                  _vm._m(7),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
                           value: _vm.GetTotalAmount,
                           expression: "GetTotalAmount"
                         }
@@ -47154,6 +47186,14 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-12 col-sm-4" }, [
       _c("label", { attrs: { for: "" } }, [_vm._v("Number Of Claim")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-12 col-sm-4" }, [
+      _c("label", { attrs: { for: "" } }, [_vm._v("Amount")])
     ])
   },
   function() {

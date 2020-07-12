@@ -97,6 +97,15 @@
 
                         <div class="row form-group">
                             <div class="col-12 col-sm-4">
+                                <label for="">Amount</label>
+                            </div>
+                            <div class="col">
+                                <input v-model="pay.amount" type="number" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-12 col-sm-4">
                                 <label for="">Number Of Play</label>
                             </div>
                             <div class="col">
@@ -176,14 +185,9 @@
             },
         },
         computed: {
-            GetTotalAmount : {
-                get: () => {
-                    return this.tongtin
-                },
-                set: () => {
-
-                }
-            },
+            GetTotalAmount : function(){
+                return this.pay.total_amount = this.tongtin.number_of_play * this.pay.number_of_claim * this.pay.amount;
+            }
         },
     }
 </script>
