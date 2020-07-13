@@ -4508,6 +4508,7 @@ __webpack_require__.r(__webpack_exports__);
       $("#modalCreateTongtinPay").modal();
     },
     btnSave_Click: function btnSave_Click() {
+<<<<<<< HEAD
       var _this4 = this;
 
       var data = new FormData();
@@ -4525,6 +4526,18 @@ __webpack_require__.r(__webpack_exports__);
         _this4.getTongtinPayList(_this4.current_page);
       })["catch"](function (err) {
         console.error(err.response.data);
+=======
+      var data = new FormData();
+      data.append('date', this.pay.date);
+      data.append('tongtin_id', this.tongtin.id);
+      data.append('number_of_claim', this.pay.number_of_claim);
+      data.append('amount', this.pay.amount);
+      data.append('total_amount', this.pay.total_amount);
+      axios.post(url + "/tontin_pay", data).then(function (res) {
+        console.log(res.data);
+      })["catch"](function (err) {
+        console.log(err.response);
+>>>>>>> 9acf7e7794e9587e3260b567bdfce1a44600aed2
       });
     }
   },
