@@ -21,7 +21,7 @@ class CreateTongtinsTable extends Migration
             $table->integer("number_of_play")->default(1);            
             $table->integer("number_of_player")->default(2);            
             $table->integer("status_id")->default(1);
-            $table->longtext("description");
+            $table->longtext("description")->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -19,7 +19,7 @@ class CreateCashesTable extends Migration
             $table->string('name')->nullable();
             $table->double('amount', 8, 2);
             $table->integer("type"); //0 income / 1 expense
-            $table->longtext("description");
+            $table->longtext("description")->nullable();
             $table->integer("status_id")->default(1);
             $table->softDeletes();
             $table->timestamps();

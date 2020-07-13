@@ -3659,7 +3659,19 @@ __webpack_require__.r(__webpack_exports__);
       };
       $("#modalCreateTongtinPay").modal();
     },
-    btnSave_Click: function btnSave_Click() {}
+    btnSave_Click: function btnSave_Click() {
+      var data = new FormData();
+      data.append('date', this.pay.date);
+      data.append('tongtin_id', this.tongtin.id);
+      data.append('number_of_claim', this.pay.number_of_claim);
+      data.append('amount', this.pay.amount);
+      data.append('total_amount', this.pay.total_amount);
+      axios.post(url + "/tontin_pay", data).then(function (res) {
+        console.log(res.data);
+      })["catch"](function (err) {
+        console.log(err.response);
+      });
+    }
   },
   computed: {
     GetTotalAmount: function GetTotalAmount() {

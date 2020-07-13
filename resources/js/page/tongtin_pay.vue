@@ -181,6 +181,18 @@
                 $("#modalCreateTongtinPay").modal();
             },
             btnSave_Click(){
+                var data = new FormData();
+                data.append('date', this.pay.date);
+                data.append('tongtin_id', this.tongtin.id);
+                data.append('number_of_claim', this.pay.number_of_claim);
+                data.append('amount', this.pay.amount);
+                data.append('total_amount', this.pay.total_amount);
+                axios.post(url+"/tontin_pay", data)
+                .then(res => {
+                    console.log(res.data);
+                }).catch(err => {
+                    console.log(err.response);
+                });
 
             },
         },

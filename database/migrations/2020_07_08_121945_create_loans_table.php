@@ -20,7 +20,7 @@ class CreateLoansTable extends Migration
             $table->integer("is_loan")->default(0);
             $table->double("amount");
             $table->integer("duration");
-            $table->longtext("description");
+            $table->longtext("description")->nullable();
             $table->integer("status_id")->default(1);
             $table->softDeletes();
             $table->timestamps();
