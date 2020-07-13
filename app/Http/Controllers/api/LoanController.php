@@ -16,7 +16,7 @@ class LoanController extends Controller
      */
     public function index()
     {
-        return LoanResource::collection(Loan::paginate(10));
+        return LoanResource::collection(Loan::paginate(1));
     }
 
     /**

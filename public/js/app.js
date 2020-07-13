@@ -4101,6 +4101,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+<<<<<<< HEAD
+=======
+//
+//
+//
+>>>>>>> 167eacf534d789409dc818f86c0aeeca8b0ac4b9
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -4524,8 +4530,12 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     GetTotalAmount: function GetTotalAmount() {
+<<<<<<< HEAD
       this.pay.total_amount = this.tongtin.number_of_play * this.pay.number_of_claim * this.pay.amount;
       if (this.pay.total_amount != NaN) return this.pay.total_amount;
+=======
+      return this.pay.total_amount = this.tongtin.number_of_play * this.pay.number_of_claim * this.pay.amount;
+>>>>>>> 167eacf534d789409dc818f86c0aeeca8b0ac4b9
     }
   }
 });
@@ -47618,78 +47628,93 @@ var render = function() {
             _vm._v(" "),
             _c(
               "tbody",
-              _vm._l(_vm.tongtins.data, function(item, index) {
-                return _c("tr", { key: index }, [
-                  _c("td", { staticClass: "pt-0" }, [_vm._v(_vm._s(item.id))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(item.start_date))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(item.name))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(item.amount))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(item.number_of_play))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(item.number_of_player))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(item.status))]),
-                  _vm._v(" "),
-                  _c("td", [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-info btn-sm",
-                        on: {
-                          click: function($event) {
-                            return _vm.btnDetails_Click(item.id)
-                          }
-                        }
-                      },
-                      [_vm._v("Details")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-warning btn-sm",
-                        on: {
-                          click: function($event) {
-                            return _vm.btnEdit_Click(item.id)
-                          }
-                        }
-                      },
-                      [_vm._v("Edit")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary btn-sm",
-                        on: {
-                          click: function($event) {
-                            return _vm.btnPayit_Click(item.id)
-                          }
-                        }
-                      },
-                      [_vm._v("Pay It")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-danger btn-sm",
-                        on: {
-                          click: function($event) {
-                            return _vm.btnDelete_Click(item.id)
-                          }
-                        }
-                      },
-                      [_vm._v("Delete")]
-                    )
-                  ])
-                ])
-              }),
-              0
+              [
+                _vm.tongtins.data == ""
+                  ? _c("tr", [
+                      _c(
+                        "td",
+                        {
+                          staticClass: "text-center text-danger",
+                          attrs: { colspan: "8" }
+                        },
+                        [_vm._v("NO DATA")]
+                      )
+                    ])
+                  : _vm._l(_vm.tongtins.data, function(item, index) {
+                      return _c("tr", { key: index }, [
+                        _c("td", { staticClass: "pt-0" }, [
+                          _vm._v(_vm._s(item.id))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(item.start_date))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(item.name))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(item.amount))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(item.number_of_play))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(item.number_of_player))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(item.status))]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-info btn-sm",
+                              on: {
+                                click: function($event) {
+                                  return _vm.btnDetails_Click(item.id)
+                                }
+                              }
+                            },
+                            [_vm._v("Details")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-warning btn-sm",
+                              on: {
+                                click: function($event) {
+                                  return _vm.btnEdit_Click(item.id)
+                                }
+                              }
+                            },
+                            [_vm._v("Edit")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-primary btn-sm",
+                              on: {
+                                click: function($event) {
+                                  return _vm.btnPayit_Click(item.id)
+                                }
+                              }
+                            },
+                            [_vm._v("Pay It")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-danger btn-sm",
+                              on: {
+                                click: function($event) {
+                                  return _vm.btnDelete_Click(item.id)
+                                }
+                              }
+                            },
+                            [_vm._v("Delete")]
+                          )
+                        ])
+                      ])
+                    })
+              ],
+              2
             ),
             _vm._v(" "),
             _vm.total_page > 1
@@ -49427,7 +49452,11 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-12 col-sm-4" }, [
+<<<<<<< HEAD
       _c("label", { attrs: { for: "" } }, [_vm._v("Total Amount")])
+=======
+      _c("label", { attrs: { for: "" } }, [_vm._v("Number Of Play")])
+>>>>>>> 167eacf534d789409dc818f86c0aeeca8b0ac4b9
     ])
   }
 ]

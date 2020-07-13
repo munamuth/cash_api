@@ -15,7 +15,7 @@ window.todayDate = new Date().toISOString().substring(0, 10);
  * Vue components. It will recursively scan this directory for the Vue
  * components and automatically register them with their "basename".
  *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
+ * Eg. ./components/ExampleComponent.vue ->s <example-component></example-component>
  */
 
 // const files = require.context('./', true, /\.vue$/i)
