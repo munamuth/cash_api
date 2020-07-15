@@ -1,8 +1,6 @@
 
 import Vue from 'vue';
 import Router from 'vue-router';
-
-
 Vue.use(Router);
 
 import home from './page/home.vue';
@@ -16,9 +14,9 @@ var router = new Router({
     routes : [
         { path: app_name + '/', name : 'home', component: home, },
         { path: app_name + '/cash', name : 'cash', component: cash, },
+        { path: app_name + '/loan', name : 'loan', component: loan, },
         { path: app_name + '/tongtin', name : 'tongtin', component: tongtin, },
         { path: app_name + '/tongtin_pay', name : 'tongtin_pay', component: tongtin_pay, },
-        { path: app_name + '/loan', name : 'loan', component: loan, },
       ],
 });
 

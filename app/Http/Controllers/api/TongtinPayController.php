@@ -48,7 +48,7 @@ class TongtinPayController extends Controller
      */
     public function show($id)
     {
-        //
+        return new TongtinPayResource(TongtinPay::find($id));
     }
 
     /**
@@ -83,5 +83,9 @@ class TongtinPayController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function search(Request $request){
+        return TongtinPayResource::collection(TongtinPay::where("tongtin_id", $request->tongtin_id)->paginate());
     }
 }
